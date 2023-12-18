@@ -4,23 +4,14 @@ import { SearchList } from "./SearchList/SearchList";
 import axios from "axios";
 import "./Search.css";
 
-const API_URL = "https://jsonplaceholder.typicode.com/users";
+const API_URL = "https://api.themoviedb.org/3/search/person?api_key=d3449ff6ec0c027623bf6b6f5fff78b3&include_adult=false&language=en-US&page=1%27";
 
 export const Search = () => {
   const [searchInputValue, setSearchInputValue] = useState("");
   const [searchList, setSearchList] = useState([]);
-  const [filteredList, setFilteredList] = useState([]);
 
   const handleChange = (event) => {
     setSearchInputValue(event.target.value);
-
-    const newFilteredItems = searchList.filter((data) => {
-      return data
-        .toLowerCase()
-        .startsWith(`${event.target.value.toLowerCase()}`);
-    });
-
-    setFilteredList(newFilteredItems);
   };
 
   const clearSearch = () => {
@@ -58,7 +49,7 @@ export const Search = () => {
         clearSearch={clearSearch}
       />
 
-      <SearchList searchList={filteredList} />
+      <SearchList searchList={searchList} />
     </div>
   );
 };
