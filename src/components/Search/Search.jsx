@@ -4,7 +4,8 @@ import { SearchList } from "./SearchList/SearchList";
 import axios from "axios";
 import "./Search.css";
 
-const API_URL = "https://api.themoviedb.org/3/search/person?api_key=d3449ff6ec0c027623bf6b6f5fff78b3&include_adult=false&language=en-US&page=1%27";
+const API_URL =
+  "https://api.themoviedb.org/3/search/person?api_key=d3449ff6ec0c027623bf6b6f5fff78b3&include_adult=false&language=en-US&page=1%27";
 
 export const Search = () => {
   const [searchInputValue, setSearchInputValue] = useState("");
@@ -16,22 +17,35 @@ export const Search = () => {
 
   const clearSearch = () => {
     setSearchInputValue("");
-    setFilteredList([]);
+    setSearchList([]);
   };
 
   const fetchSearchList = async () => {
     try {
-      const response = await axios(API_URL);
-      const result = response.data;
-      setSearchList(result.map((user) => user.name));
+      const response = await axios(API_URL, {
+        params: {
+          query: searchInputValue,
+        },
+      });
+
+      console.log("RES", response.data);
+      setSearchList(response.data.results);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    fetchSearchList();
-  }, []);
+    const timeout = setTimeout(() => {
+      if (searchInputValue) {
+        fetchSearchList();
+      }
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [searchInputValue]);
 
   return (
     <div className="search-container">
